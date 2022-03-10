@@ -1,3 +1,5 @@
+# python SnowrunnerChangeAttributes.py | tee output.log
+
 import os
 import glob
 import pandas as pd
@@ -88,6 +90,7 @@ def doReplace(iIndex, row):
 if __name__ == "__main__":
 
 	df = pd.read_excel('E:\Temp\Snowrunner\SnowrunnerChangeAttributes.xlsx', dtype=str).fillna('')
+	#print(df)
 	
 	for iIndex, row in df.iterrows():
 		if row['Enable'].upper() == 'V':
@@ -97,4 +100,3 @@ if __name__ == "__main__":
 			if row['Action'] == 'Insert':
 				doInsert(iIndex, row)
 				
-
