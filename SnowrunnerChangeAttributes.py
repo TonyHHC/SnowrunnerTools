@@ -70,8 +70,8 @@ def doReplace(iIndex, row):
 		if os.path.exists(file):
 			with open(file, 'r+', encoding='utf-8') as f:
 				content = f.read()
-				if content.find(strTarget) != -1:
-					new_content = content.replace(strTarget, strReplace)
+				if (content.find(strTarget) != -1 and strTarget != '*' ) or (strTarget == '*'):
+					new_content = content.replace(strTarget, strReplace) if strTarget != '*' else strReplace
 			
 					f.seek(0)
 					f.truncate()
