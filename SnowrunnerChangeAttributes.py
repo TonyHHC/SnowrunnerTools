@@ -17,13 +17,15 @@ def specialCharReplace(strSource, strSearch):
 	return strRet
 
 def doInsert(iIndex, row):
-	print('[{}] {} :'.format(iIndex, row['Filename']))
+	print('[{}] {} :'.format(iIndex+2, row['Filename']))
 	
 	strFilename = specialCharReplace(row['Filename'], '[]')
 	strPrefix = row['PrefixString'].replace('\\t', '\t').replace('\\n', '\n')
 	strTarget = row['TargetString'].replace('\\t', '\t').replace('\\n', '\n')
 	
 	files = glob.glob(strFilename, recursive=True)
+	
+	bInsert = False
 	
 	for file in files:
 		print('    >> ', end='')
@@ -34,8 +36,6 @@ def doInsert(iIndex, row):
 					index = content.find(strPrefix)
 		
 					if index != -1:
-						bInsert = True
-			
 						new_index = index+len(strPrefix)
 						new_content = content[:new_index] + strTarget + content[new_index+1:]
 			
@@ -44,6 +44,7 @@ def doInsert(iIndex, row):
 			
 						f.write(new_content)
 						print('插入成功   ', end='')
+						bInsert = True
 					else:
 						print('插入失敗   ', end='')
 				else:
@@ -52,18 +53,22 @@ def doInsert(iIndex, row):
 			print('檔案不存在 ', end='')
 			
 		print(file)
+		
+	return bInsert
 
 	
 	
 def doReplace(iIndex, row):
 
-	print('[{}] {} :'.format(iIndex, row['Filename']))
+	print('[{}] {} :'.format(iIndex+2, row['Filename']))
 	
 	strFilename = specialCharReplace(row['Filename'], '[]')
 	strTarget = row['TargetString'].replace('\\t', '\t').replace('\\n', '\n')
 	strReplace = row['ReplaceToString'].replace('\\t', '\t').replace('\\n', '\n')
 	
 	files = glob.glob(strFilename, recursive=True)
+	
+	bReplace = False
 	
 	for file in files:
 		print('    >> ', end='')
@@ -78,6 +83,7 @@ def doReplace(iIndex, row):
 					f.write(new_content)
 					
 					print('更新成功   ', end='')
+					bReplace = True
 				else:
 					print('無須更新   ', end='')
 					
@@ -85,6 +91,8 @@ def doReplace(iIndex, row):
 			print('檔案不存在 ', end='')
 			
 		print(file)
+		
+	return bReplace
 	
 
 if __name__ == "__main__":
@@ -92,11 +100,17 @@ if __name__ == "__main__":
 	df = pd.read_excel('E:\Temp\Snowrunner\SnowrunnerChangeAttributes.xlsx', dtype=str).fillna('')
 	#print(df)
 	
+	not_effect_line = list()
+	
 	for iIndex, row in df.iterrows():
 		if row['Enable'].upper() == 'V':
 			if row['Action'] == 'Replace':
-				doReplace(iIndex, row)
+				ret = doReplace(iIndex, row)
+				if ret == False: not_effect_line.append(iIndex+2)
 				
 			if row['Action'] == 'Insert':
-				doInsert(iIndex, row)
+				ret = doInsert(iIndex, row)
+				if ret == False: not_effect_line.append(iIndex+2)
+				
+	print('\n無效行 : ', not_effect_line)
 				
