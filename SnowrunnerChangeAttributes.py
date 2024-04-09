@@ -94,6 +94,43 @@ def doReplace(iIndex, row):
 		
 	return bReplace
 	
+def doRegularExpressionReplace(iIndex, row):
+
+	print('[{}] {} :'.format(iIndex+2, row['Filename']))
+	
+	strFilename = specialCharReplace(row['Filename'], '[]')
+	pattern = row['TargetString']
+	replace_with = row['ReplaceToString']
+	
+	files = glob.glob(strFilename, recursive=True)
+	
+	bReplace = False
+	
+	for file in files:
+		print('    >> ', end='')
+		if os.path.exists(file):
+			# 讀取指定檔案中的內容
+			with open(file, 'r', encoding='utf-8') as f:
+				content = f.read()
+				# 替換內容中的單字
+				newContent = re.sub(pattern, replace_with, content)
+
+			if newContent != content:
+				# 將處理後的內容寫回檔案中
+				with open(file, 'w', encoding="utf-8" ) as f:
+					f.write(newContent)
+				
+				print('更新成功   ', end='')
+				bReplace = True
+			else:
+				print('無須更新   ', end='')
+		else:
+			print('檔案不存在 ', end='')
+			
+		print(file)
+		
+	return bReplace
+	
 
 if __name__ == "__main__":
 
@@ -111,6 +148,9 @@ if __name__ == "__main__":
 			if row['Action'] == 'Insert':
 				ret = doInsert(iIndex, row)
 				if ret == False: not_effect_line.append(iIndex+2)
+				
+			if row['Action'] == 'RegExp':
+				ret = doRegularExpressionReplace(iIndex, row)
 				
 	print('\n無效行 : ', not_effect_line)
 				
