@@ -46,49 +46,10 @@ def getAllXmlInFolderRecursively(folderName):
 
 if __name__ == '__main__':
 
-	'''
-	# 將所有車輛改為 [永遠有差速器] [一開始皆可使用]
-	listPatterns = [
-		[r'DiffLockType=".+(\.+)?"', 'DiffLockType="Always"'],
-		[r'Country=".+(\.+)?"', 'Country=""'],
-		[r'FuelCapacity="\d+(\.\d+)?"', 'FuelCapacity="1000"']
-	]
-	
-	filename_list = getAllXmlInFolder(work_dir + r'\classes\trucks')
-	for filename in filename_list:
-		change_mod_attribute_by_file(filename, listPatterns)
-		
-	filename_list = getAllXmlInFolder(work_dir + r'\classes\truck_replacements')
-	for filename in filename_list:
-		change_mod_attribute_by_file(filename, listPatterns)
-		
-	filename_list = getAllXmlInFolder(work_dir + r'\_dlc\EXP_DLC_02\classes\trucks')
-	for filename in filename_list:
-		change_mod_attribute_by_file(filename, listPatterns)
-		
-	filename_list = getAllXmlInFolder(work_dir + r'\_dlc\EXP_DLC_02\classes\truck_replacements')
-	for filename in filename_list:
-		change_mod_attribute_by_file(filename, listPatterns)
-		
-	# 減少油耗
-	listPatterns = [
-		[r'FuelConsumption="\d+(\.\d+)?"', 'FuelConsumption="0.01"']
-	]
-	
-	filename_list = getAllXmlInFolder(work_dir + r'\classes\engines')
-	for filename in filename_list:
-		change_mod_attribute_by_file(filename, listPatterns)
-		
-	filename_list = getAllXmlInFolder(work_dir + r'\_dlc\EXP_DLC_02\classes\engines')
-	for filename in filename_list:
-		change_mod_attribute_by_file(filename, listPatterns)
-	'''
-		
 	# Unlock
 	listPatterns = [
 		[r'\tUnlockByRank="\d+(\.\d+)?"', '\tUnlockByRank="1"'],
 		[r'\tUnlockByExploration="(.+)"', '\tUnlockByExploration="false"'],
-		[r'\tUnlockByObjective="(.+)"', '\tUnlockByObjective=""'],
 		[r'\tAddonUnlockByObjective="(.+)"', '\tAddonUnlockByObjective="false"'],
 		[r'\tFuelConsumption="\d+(\.\d+)?"', '\tFuelConsumption="0.1"'],
 		[r'\tDiffLockType=".+(\.+)?"', '\tDiffLockType="Always"'],
@@ -96,12 +57,19 @@ if __name__ == '__main__':
 		[r'\tFuelCapacity="\d+(\.\d+)?"', '\tFuelCapacity="1000"']
 	]
 	
-	#filename_list = getAllXmlInFolderRecursively(work_dir + r'\classes')
 	filename_list = getAllXmlInFolderRecursively(work_dir)
 	for filename in filename_list:
 		change_mod_attribute_by_file(filename, listPatterns)
 	
-
+	# Wheel grip
+	listPatterns = [
+		[r'BodyFriction="\d+(\.\d+)?"', 'BodyFriction="3.2"'],
+		[r'SubstanceFriction="\d+(\.\d+)?"', 'SubstanceFriction="5.0"'],
+		[r'BodyFrictionAsphalt="\d+(\.\d+)?"', 'BodyFrictionAsphalt="4.0"'],
+	]
 	
+	filename_list = getAllXmlInFolder(work_dir + r'\classes\wheels')
+	for filename in filename_list:
+		change_mod_attribute_by_file(filename, listPatterns)
 	
 
